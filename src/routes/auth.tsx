@@ -12,9 +12,9 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Sign in — Bahi Khata" },
+      { title: "Sign in — Biller" },
       { name: "description", content: "Sign in to extract handwritten bills and post them to Zoho Books." },
-      { property: "og:title", content: "Sign in — Bahi Khata" },
+      { property: "og:title", content: "Sign in — Biller" },
       { property: "og:description", content: "Access your handwritten bill ledger and model benchmark." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -81,7 +81,7 @@ function AuthPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 flex items-center gap-2">
           <ReceiptIndianRupee className="size-5 text-primary" />
-          <span className="font-display text-2xl">Bahi Khata</span>
+          <span className="font-display text-2xl">Biller</span>
         </div>
         <h1 className="font-display text-3xl">
           {mode === "signin" ? "Open the ledger" : "Start a ledger"}

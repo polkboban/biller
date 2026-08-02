@@ -11,12 +11,12 @@ import { Upload, Loader2, ImagePlus } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/upload")({
   head: () => ({
     meta: [
-      { title: "Capture a bill — Bahi Khata" },
+      { title: "Capture a bill — Biller" },
       {
         name: "description",
         content: "Upload a handwritten Indian bill and let two vision models extract vendor, date, GST and totals.",
       },
-      { property: "og:title", content: "Capture a bill — Bahi Khata" },
+      { property: "og:title", content: "Capture a bill — Biller" },
       { property: "og:description", content: "Two vision models read your handwritten receipt in parallel." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

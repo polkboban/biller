@@ -1,7 +1,5 @@
-/** Server-only Lovable AI Gateway helper for vision extraction. */
+/** Server-only AI Gateway helper for vision extraction using Google Gemini directly. */
 import { normalizeFields, type BillFields } from "./bill-schema";
-
-const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
 export const EXTRACTION_PROMPT = `You read photographs of handwritten Indian bills, receipts and kachcha invoices.
 Transcribe carefully: figures may be in Devanagari or regional scripts, amounts may use lakh-style comma grouping, dates are usually DD/MM/YYYY.
@@ -66,51 +64,68 @@ export function extractJson(text: string): unknown | null {
 }
 
 export async function runVisionExtraction(
-  model: string,
+  model: string, // Kept for compatibility, but we will default to Gemini Flash
   imageUrl: string,
   apiKey: string,
 ): Promise<ExtractionResult> {
   const started = Date.now();
-  const body: Record<string, unknown> = {
-    model,
-    messages: [
-      {
-        role: "user",
-        content: [
-          { type: "text", text: EXTRACTION_PROMPT },
-          { type: "image_url", image_url: { url: imageUrl } },
-        ],
-      },
-    ],
-    max_completion_tokens: 4000,
-  };
-
+  
   try {
-    const res = await fetch(GATEWAY, {
+    // 1. Fetch the image from Supabase (or any URL) to get the raw bytes
+    const imageReq = await fetch(imageUrl);
+    if (!imageReq.ok) {
+      throw new Error(`Failed to fetch image from storage: ${imageReq.statusText}`);
+    }
+    
+    // 2. Convert the image to base64 which Gemini requires
+    const arrayBuffer = await imageReq.arrayBuffer();
+    const base64Image = Buffer.from(arrayBuffer).toString("base64");
+    const mimeType = imageReq.headers.get("content-type") || "image/jpeg";
+
+    // 3. Construct the Google Gemini request payload
+    const geminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=" + apiKey;
+    const body = {
+      contents: [
+        {
+          parts: [
+            { text: EXTRACTION_PROMPT },
+            {
+              inline_data: {
+                mime_type: mimeType,
+                data: base64Image,
+              },
+            },
+          ],
+        },
+      ],
+      generationConfig: {
+        response_mime_type: "application/json", // Forces Gemini to return pure JSON
+        temperature: 0.1,
+      },
+    };
+
+    // 4. Send the request to Google
+    const res = await fetch(geminiEndpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Lovable-API-Key": apiKey,
       },
       body: JSON.stringify(body),
     });
 
-    const text = await res.text();
+    const json = await res.json();
+
     if (!res.ok) {
-      const friendly =
-        res.status === 429
-          ? "Rate limited by the AI gateway — try again in a moment."
-          : res.status === 402
-            ? "AI credits exhausted for this workspace."
-            : `AI request failed [${res.status}]: ${text.slice(0, 400)}`;
-      return { parsed: null, raw: text, latencyMs: Date.now() - started, error: friendly };
+      const friendly = res.status === 429
+        ? "Rate limited by Google API — try again in a moment."
+        : `Google API error [${res.status}]: ${json?.error?.message || "Unknown error"}`;
+      return { parsed: null, raw: JSON.stringify(json), latencyMs: Date.now() - started, error: friendly };
     }
 
-    const json = JSON.parse(text) as {
-      choices?: { message?: { content?: string } }[];
-    };
-    const content = json.choices?.[0]?.message?.content ?? "";
+    // 5. Extract and parse the response
+    const content = json.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
     const obj = extractJson(content);
+    
     if (!obj) {
       return {
         parsed: null,
@@ -119,6 +134,7 @@ export async function runVisionExtraction(
         error: "Model did not return parseable JSON.",
       };
     }
+    
     return {
       parsed: normalizeFields(obj),
       raw: content,
@@ -130,7 +146,7 @@ export async function runVisionExtraction(
       parsed: null,
       raw: "",
       latencyMs: Date.now() - started,
-      error: err instanceof Error ? err.message : "Unexpected AI gateway error",
+      error: err instanceof Error ? err.message : "Unexpected Gemini API error",
     };
   }
 }

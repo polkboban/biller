@@ -10,9 +10,9 @@ import { Loader2, FileText } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/bills/")({
   head: () => ({
     meta: [
-      { title: "Bill ledger — Bahi Khata" },
+      { title: "Bill ledger — Biller" },
       { name: "description", content: "Every handwritten bill you captured, its review state and Zoho Books status." },
-      { property: "og:title", content: "Bill ledger — Bahi Khata" },
+      { property: "og:title", content: "Bill ledger — Biller" },
       { property: "og:description", content: "Track extraction, review and Zoho Books posting for each bill." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

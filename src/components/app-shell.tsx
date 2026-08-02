@@ -19,7 +19,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-6xl items-center gap-6 px-5 py-3">
           <Link to="/upload" className="flex items-center gap-2">
             <ReceiptIndianRupee className="size-5 text-primary" />
-            <span className="font-display text-xl leading-none">Bahi&nbsp;Khata</span>
+            <span className="font-display text-xl leading-none">Biller</span>
           </Link>
           <nav className="flex items-center gap-1 text-sm">
             {NAV.map((item) => (

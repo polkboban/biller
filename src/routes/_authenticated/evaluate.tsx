@@ -11,12 +11,12 @@ import { Loader2, Trophy, Gauge } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/evaluate")({
   head: () => ({
     meta: [
-      { title: "Model benchmark — Bahi Khata" },
+      { title: "Model benchmark — Biller" },
       {
         name: "description",
         content: "Field-level accuracy, line-item precision and latency for each vision model, scored against your reviewed bills.",
       },
-      { property: "og:title", content: "Model benchmark — Bahi Khata" },
+      { property: "og:title", content: "Model benchmark — Biller" },
       { property: "og:description", content: "Which vision model reads handwritten Indian bills best? Scored on your own data." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

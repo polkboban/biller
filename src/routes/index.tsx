@@ -6,13 +6,13 @@ import { MODELS } from "@/lib/bill-schema";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Bahi Khata — AI extraction for handwritten Indian bills" },
+      { title: "Biller — AI extraction for handwritten Indian bills" },
       {
         name: "description",
         content:
           "Read handwritten Indian bills with two vision AI models side by side, correct the ledger, and push clean expenses into Zoho Books.",
       },
-      { property: "og:title", content: "Bahi Khata — AI extraction for handwritten Indian bills" },
+      { property: "og:title", content: "Biller — AI extraction for handwritten Indian bills" },
       {
         property: "og:description",
         content:
@@ -31,7 +31,7 @@ function Landing() {
       <header className="mx-auto flex max-w-5xl items-center justify-between px-5 py-5">
         <div className="flex items-center gap-2">
           <ReceiptIndianRupee className="size-5 text-primary" />
-          <span className="font-display text-xl">Bahi Khata</span>
+          <span className="font-display text-xl">Biller</span>
         </div>
         <Button asChild variant="outline" size="sm">
           <Link to="/auth">Sign in</Link>

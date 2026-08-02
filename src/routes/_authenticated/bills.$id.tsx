@@ -13,9 +13,9 @@ import { Loader2, Save, Send, RefreshCw, Trash2, ArrowLeft } from "lucide-react"
 export const Route = createFileRoute("/_authenticated/bills/$id")({
   head: () => ({
     meta: [
-      { title: "Bill detail — Bahi Khata" },
+      { title: "Bill detail — Biller" },
       { name: "description", content: "Compare both model readings of this handwritten bill, correct it, and post it to Zoho Books." },
-      { property: "og:title", content: "Bill detail — Bahi Khata" },
+      { property: "og:title", content: "Bill detail — Biller" },
       { property: "og:description", content: "Field-by-field comparison of two vision models on one handwritten bill." },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary" },

@@ -63,7 +63,7 @@ export const extractBill = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { billId: string }) => input)
   .handler(async ({ data, context }) => {
-    const apiKey = process.env["LOVABLE_API_KEY"];
+    const apiKey = process.env["GEMINI_API_KEY"];
     if (!apiKey) throw new Error("AI is not configured for this project.");
 
     const { data: bill, error } = await context.supabase
